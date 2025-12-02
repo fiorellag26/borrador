@@ -1,0 +1,43 @@
+{
+  "id": "tpi-backend",
+  "realm": "tpi-backend",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {"name": "CLIENTE"},
+      {"name": "ADMIN"}
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "tpi-backend-client",
+      "name": "tpi-backend-client",
+      "rootUrl": "http://keycloak:8080",
+      "redirectUris": ["http://localhost:8080/*","http://localhost:8095/*"],
+      "webOrigins": ["+"],
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "directAccessGrantsEnabled": true
+    }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {"type": "password", "value": "testpass", "temporary": false}
+      ],
+      "realmRoles": ["CLIENTE"]
+    },
+    {
+      "username": "admin01",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {"type": "password", "value": "admin01", "temporary": false}
+      ],
+      "realmRoles": ["ADMIN"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+server:
+  port: 8095
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/tpi-backend
+          audiences: tpi-backend-client
