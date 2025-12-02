@@ -6,5 +6,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/tpi-backend
-          audiences: tpi-backend-client
+          issuer-uri: http://localhost:8081/realms/tpi-backend
