@@ -1,0 +1,64 @@
+{
+  "id": "tpi-backend",
+  "realm": "tpi-backend",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "tpi-backend-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "tpi-backend-secret",
+      "redirectUris": ["http://localhost:8095/*", "http://localhost:8080/*"],
+      "attributes": {}
+    }
+  ],
+  "users": [
+    {
+      "username": "cliente01",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "clave123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["USUARIO"],
+      "emailVerified": true,
+      "email": "cliente@gmail.com",
+      "firstName": "cliente",
+      "lastName": "prueba"
+    },
+    {
+      "username": "admin01",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ADMIN"],
+      "emailVerified": true,
+      "email": "admin@gmail.com",
+      "firstName": "admin",
+      "lastName": "user"
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "USUARIO",
+        "description": "Usuario estándar"
+      },
+      {
+        "name": "ADMIN",
+        "description": "Administrador"
+      }
+    ]
+  }
+}

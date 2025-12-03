@@ -4,8 +4,8 @@ package com.tpi.ms_auth_test.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.core.convert.converter.Converter;
@@ -20,17 +20,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Configuration
-@EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+
+                //acceden todos
                 .requestMatchers("/public/**").permitAll()
-                .requestMatchers("/secured/**").authenticated()  // ✅ Solo token válido
-                .requestMatchers("/admin-only/**").hasRole("admin")  // ✅ Requiere ROLE_admin
+
+                //accedida por roles autenticados
+                .requestMatchers("/secured/**").hasAnyRole("USUARIO", "ADMIN")
+                
+                //accedida con admin
+                .requestMatchers("/admin-only/**").hasRole("ADMIN")
                 .anyRequest().denyAll()
             )
             .oauth2ResourceServer(oauth2 ->
@@ -40,48 +46,27 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // -----------------------------
-    // CONVERTER EXACTO DEL APUNTE
-    // -----------------------------
+    // Converter para extraer roles del realm_access claim
     @Bean
-    public Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
+    Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
         return new Converter<Jwt, AbstractAuthenticationToken>() {
             @Override
             public AbstractAuthenticationToken convert(Jwt jwt) {
-                
-                // 🔍 LOG 1: Ver todos los claims del token
-                System.out.println("📋 TODOS LOS CLAIMS:");
-                jwt.getClaims().forEach((key, value) -> 
-                    System.out.println("  " + key + " = " + value)
-                );
-                
-                // Obtiene el objeto realm_access
                 Map<String, List<String>> realmAccess = jwt.getClaim("realm_access");
                 
-                // 🔍 LOG 2: Ver qué hay en realm_access
-                System.out.println("🔑 realm_access = " + realmAccess);
-                
-                if (realmAccess == null || realmAccess.get("roles") == null) {
-                    System.out.println("⚠️ NO SE ENCONTRARON ROLES EN realm_access");
-                    return new JwtAuthenticationToken(jwt, List.of());
+                List<String> roles = List.of();
+                if (realmAccess != null && realmAccess.get("roles") != null) {
+                    roles = realmAccess.get("roles");
                 }
-                
-                // 🔍 LOG 3: Ver los roles encontrados
-                List<String> roles = realmAccess.get("roles");
-                System.out.println("📜 ROLES encontrados: " + roles);
-                
-                // Convierte "cliente" → "ROLE_cliente"
+
                 List<GrantedAuthority> authorities = roles.stream()
-                        .map(r -> "ROLE_" + r)
-                        .peek(role -> System.out.println("✅ Autoridad agregada: " + role))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-                
-                // 🔍 LOG 4: Ver las autoridades finales
-                System.out.println("🎯 AUTORIDADES FINALES: " + authorities);
+                    .map(r -> "ROLE_" + r.toUpperCase())
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
                 
                 return new JwtAuthenticationToken(jwt, authorities);
             }
         };
     }
+    
 }

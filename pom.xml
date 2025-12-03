@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>gateway</module>
         <module>ms-auth-test</module>
     </modules>
 

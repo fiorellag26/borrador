@@ -2,8 +2,8 @@ server:
   port: 8095
 
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8081/realms/tpi-backend
+  profiles:
+    active: local # Cambia a 'docker' para Docker
+
+# La config de seguridad se define en application-local.yml y application-docker.yml
+# La config de seguridad se define en application-local.yml y application-docker.yml
