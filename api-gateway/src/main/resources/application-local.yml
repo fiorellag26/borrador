@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: ms-auth-test
+          uri: http://localhost:8095
+          predicates:
+            - Path=/auth-test/**
+          filters:
+            - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/tpi-backend
+          jwk-set-uri: http://localhost:8081/realms/tpi-backend/protocol/openid-connect/certs

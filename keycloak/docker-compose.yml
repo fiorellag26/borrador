@@ -13,10 +13,10 @@ services:
     environment: 
       - KEYCLOAK_ADMIN=admin 
       - KEYCLOAK_ADMIN_PASSWORD=admin123
-      - KC_HOSTNAME=localhost
-      - KC_HOSTNAME_PORT=8081
-      - KC_HOSTNAME_STRICT=false
-      - KC_HOSTNAME_STRICT_HTTPS=false
+#      - KC_HOSTNAME=localhost
+#      - KC_HOSTNAME_PORT=8081
+#      - KC_HOSTNAME_STRICT=false
+#      - KC_HOSTNAME_STRICT_HTTPS=false
     volumes: 
       - ./realm-export.json:/opt/keycloak/data/import/realm.json:ro
       - keycloak_data:/opt/keycloak/data 

@@ -37,6 +37,22 @@ services:
     networks:
       - tpi-network
 
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/tpi-backend
+      - KEYCLOAK_JWK_SET_URI=http://keycloak:8080/realms/tpi-backend/protocol/openid-connect/certs
+    depends_on:
+      - ms-auth-test
+      - keycloak
+    networks:
+      - tpi-network
+
 volumes:
   keycloak_data:
 

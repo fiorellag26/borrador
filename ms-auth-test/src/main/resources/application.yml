@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: local # Cambia a 'docker' para Docker
+    active: docker # Cambia a 'docker' para Docker
 
 # La config de seguridad se define en application-local.yml y application-docker.yml
 # La config de seguridad se define en application-local.yml y application-docker.yml
